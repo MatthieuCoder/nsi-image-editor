@@ -13,6 +13,7 @@ const form = document.querySelector<HTMLFormElement>("#filters");
 const fileInput = document.querySelector<HTMLInputElement>("#file");
 const filterAddSelect = document.querySelector<HTMLInputElement>("#select");
 const addFilterButton = document.querySelector<HTMLInputElement>("#add-filter");
+const exportButton = document.querySelector<HTMLInputElement>("#img-export");
 const renderer = new Renderer(canvas, form);
 
 Filters.forEach(({ name }) => {
@@ -21,7 +22,25 @@ Filters.forEach(({ name }) => {
             ${name}
         </option>
     `;
-})
+});
+
+const saveData = () => {
+    const a = document.createElement("a");
+    document.body.appendChild(a);
+    a.setAttribute("style", "display: none");
+    return function (url, fileName) {
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        window.URL.revokeObjectURL(url);
+    };
+};
+
+const dataSaver = saveData();
+
+exportButton.addEventListener("click", () => {
+    dataSaver(canvas.toDataURL("png", 100), "img.png");
+});
 
 addFilterButton.addEventListener("click", () => {
     const selectedFilterConstructor = Filters.find((n) => n.name === filterAddSelect.value);

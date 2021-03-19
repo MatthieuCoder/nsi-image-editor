@@ -19,4 +19,5 @@ out vec4 outColor;
 
 void main() {
     outColor = texture(u_image, v_texCoord);
+    outColor.a = 1.0;
 }

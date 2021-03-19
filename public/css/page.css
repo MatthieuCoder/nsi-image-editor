@@ -12,13 +12,18 @@ html, body {
     grid-template-columns: auto 20rem;
     flex-direction: row;
 }
-.controls {
+.right {
     background: #555555;
-    height: calc(100% - 4rem);
-    padding: 2rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+.controls {
+    padding: 1rem;
 }
 .title {
-    padding-left: 2rem;
+    padding: 1rem;
     background: #666666;
 }
 h1 {
@@ -34,6 +39,7 @@ h1 {
 .content {
     display: flex;
     flex-flow: column;
+    flex: 1;
 }
 .effects li {
     list-style: none;
@@ -43,9 +49,15 @@ h1 {
     padding: 2rem 0 0;
 }
 canvas {
-    max-width: 100%;
-    max-height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    position: absolute;
 }
 .canvasZone {
+    position: fixed;
+    display: block;
     overflow: scroll;
+    height: 100vh;
+    width: calc(100vw - 20rem);
 }

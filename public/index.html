@@ -10,6 +10,11 @@
 
 <div class="layout">
     <div class="content">
+        <div class="canvasZone">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+    <div class="right">
         <div class="title">
             <h1>Bienvenu(e) sur Matthieu Image Editor!</h1>
             <p>
@@ -17,11 +22,7 @@
                 Pour vous servir du site web, veuillez sélectionner une image dans les controles du programme
             </p>
         </div>
-        <div class="canvasZone">
-            <canvas id="canvas"></canvas>
-        </div>
-    </div>
-    <div class="controls">
+        <div class="controls">
         <h3>Controles de l'édition</h3>
 
         <input id="file" type="file" title="Image a éditer" accept="image/x-png,image/jpeg" />
@@ -33,6 +34,11 @@
         <button id="add-filter">
             Ajouter le filtre
         </button>
+
+        <button id="img-export">
+            Exporter l'image
+        </button>
+        </div>
     </div>
 </div>
 <script src="js/index.js"></script>

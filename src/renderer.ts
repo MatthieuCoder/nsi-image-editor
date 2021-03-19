@@ -33,7 +33,7 @@ export class Renderer {
 
     constructor(canvas: HTMLCanvasElement, mountPoint: HTMLElement) {
 
-        this.gl = canvas.getContext("webgl2");
+        this.gl = canvas.getContext("webgl2", {preserveDrawingBuffer:true});
         this.form = mountPoint;
 
         this.program = createProgram(this.gl,
