@@ -1,0 +1,40 @@
+<html>
+<head>
+    <title>NSI | Image edition</title>
+    <link href="css/page.css" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="layout">
+    <div class="content">
+        <div class="title">
+            <h1>Bienvenu(e) sur Matthieu Image Editor!</h1>
+            <p>
+                Ce site a été réalisé par Matthieu Pignolet pendant ma première année de spé NSI. <br/>
+                Pour vous servir du site web, veuillez sélectionner une image dans les controles du programme
+            </p>
+        </div>
+        <div class="canvasZone">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+    <div class="controls">
+        <h3>Controles de l'édition</h3>
+
+        <input id="file" type="file" title="Image a éditer" accept="image/x-png,image/jpeg" />
+
+        <h3>Effets disponibles</h3>
+        <span id="filters" />
+
+        <label for="select">Filtre selectionné</label> <br/><select id="select"></select>
+        <button id="add-filter">
+            Ajouter le filtre
+        </button>
+    </div>
+</div>
+<script src="js/index.js"></script>
+</body>
+</html>

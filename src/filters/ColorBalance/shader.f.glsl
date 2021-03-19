@@ -1,5 +1,7 @@
 #version 300 es
 
+#define MAX_KERNEL_SIZE 5
+
 // fragment shaders don't have a default precision so we need
 // to pick one. highp is a good default. It means "high precision"
 precision highp float;
@@ -7,9 +9,7 @@ precision highp float;
 // our texture
 uniform sampler2D u_image;
 
-// the convolution kernal data
-uniform float u_kernel[9];
-uniform float u_kernelWeight;
+uniform vec4 u_luminance;
 
 // the texCoords passed in from the vertex shader.
 in vec2 v_texCoord;
@@ -18,5 +18,6 @@ in vec2 v_texCoord;
 out vec4 outColor;
 
 void main() {
-    outColor = texture(u_image, v_texCoord);
+    vec4 color = texture(u_image, v_texCoord);
+    outColor = color * u_luminance;
 }

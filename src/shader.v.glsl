@@ -5,6 +5,7 @@
 in vec2 a_position;
 in vec2 a_texCoord;
 
+uniform float u_flipY;
 // Used to pass in the resolution of the canvas
 uniform vec2 u_resolution;
 
@@ -22,8 +23,8 @@ void main() {
 
     // convert from 0->2 to -1->+1 (clipspace)
     vec2 clipSpace = zeroToTwo - 1.0;
-    
-    gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+
+    gl_Position = vec4(clipSpace * vec2(1, u_flipY), 0, 1);
 
     // pass the texCoord to the fragment shader
     // The GPU will interpolate this value between points.

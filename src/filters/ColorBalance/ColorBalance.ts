@@ -7,29 +7,44 @@ import vertexSource from "./shader.v.glsl";
 import fragmentSource from "./shader.f.glsl";
 import {setRectangle} from "../../utilities/webglUtils";
 
-export class Sepia extends BaseFilter {
-
-    private uColor: WebGLUniformLocation;
+export class ColorBalance extends BaseFilter {
     private uResolutionLocation: WebGLUniformLocation;
     private uImageLocation: WebGLUniformLocation;
-    private stateForm: HTMLFormElement;
+    private uLuminance: WebGLUniformLocation;
 
-    private force: number = 100;
-    private uForce: WebGLUniformLocation;
+    private state: {
+        r: number;
+        g: number;
+        b: number;
+    } = {
+        r: 1,
+        g: 1,
+        b: 1,
+    };
+
+    private form: HTMLFormElement;
+
+    private _stateUpdate() {
+        this.state.r = parseInt((this.form.elements.namedItem("red") as HTMLInputElement).value) / 100;
+        this.state.g = parseInt((this.form.elements.namedItem("green") as HTMLInputElement).value) / 100;
+        this.state.b = parseInt((this.form.elements.namedItem("blue") as HTMLInputElement).value) / 100;
+
+        this._callRender();
+    };
 
     constructor(gl: WebGL2RenderingContext,
                 private positionBuffer: WebGLBuffer,
                 private texCoordBuffer: WebGLBuffer,
-                cr: Function
+                _callRender: Function
     ) {
-        super(gl, vertexSource, fragmentSource, cr);
+        super(gl, vertexSource, fragmentSource, _callRender);
         this._initialize();
     }
 
     private _initialize() {
         this.uResolutionLocation = this.gl.getUniformLocation(this.program, "u_resolution");
+        this.uLuminance = this.gl.getUniformLocation(this.program, "u_luminance");
         this.uImageLocation = this.gl.getUniformLocation(this.program, "u_image");
-        this.uForce = this.gl.getUniformLocation(this.program, "u_force");
         const aPositionLocation = this.gl.getAttribLocation(this.program, "a_position");
         const aTexCoordLocation = this.gl.getAttribLocation(this.program, "a_texCoord");
 
@@ -45,42 +60,45 @@ export class Sepia extends BaseFilter {
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.texCoordBuffer);
         this.gl.vertexAttribPointer(aTexCoordLocation, size, type, normalize, stride, offset);
 
-        this.uColor = this.gl.getUniformLocation(this.program, "u_color");
     }
 
     public render() {
         this.gl.uniform1i(this.uImageLocation, 0);
         this.gl.uniform2f(this.uResolutionLocation, this.gl.canvas.width, this.gl.canvas.height);
-        this.gl.uniform1f(this.uForce, this.force);
+
+        this.gl.uniform4f(this.uLuminance, this.state.r, this.state.g, this.state.b, 1);
+
         this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer);
         setRectangle(this.gl, 0, 0, this.gl.canvas.width, this.gl.canvas.height);
         this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
     }
 
-
-    public component(): HTMLDivElement {
+    component(): HTMLDivElement {
         const component = document.createElement("div");
-        this.stateForm = document.createElement("form");
+        this.form = document.createElement("form");
 
-        this.stateForm.innerHTML = `
+        this.form.innerHTML = `
             <div class="adjustments" style="flex-flow: column; display: flex;">
                 <label>
-                    Force
-                    <input id="force" name="force" type="range" max="99">
+                    R
+                    <input id="red" name="red" type="range" max="200">
+                </label>
+                <label>
+                    G
+                    <input id="green" name="green" type="range" max="200">
+                </label>
+                <label>
+                    B
+                    <input id="blue" name="blue" type="range" max="200">
                 </label>
             </div>
         `;
 
-        ["force"].forEach((name) => {
-            this.stateForm.elements[name].addEventListener("input", this.update.bind(this));
+        ["blue", "green", "red"].forEach((name) => {
+            this.form.elements[name].addEventListener("input", this._stateUpdate.bind(this));
         });
-        component.appendChild(this.stateForm);
+        component.appendChild(this.form);
 
         return component;
-    }
-
-    private update() {
-        this.force = parseInt(this.stateForm.elements["force"].value) / 100;
-        this._callRender();
     }
 }
