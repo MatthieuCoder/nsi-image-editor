@@ -88,7 +88,7 @@ export class Renderer {
         this.render();
     }
 
-    public updateImage (image: OffscreenCanvas) {
+    public updateImage (image: HTMLImageElement) {
         this.gl.bindTexture(this.gl.TEXTURE_2D, this.texture);
         // Upload the image into the texture.
         const mipLevel = 0,

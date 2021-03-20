@@ -56,12 +56,7 @@ fileInput.addEventListener("change",  async () => {
         data.src = URL.createObjectURL(image);
 
         data.onload = () => {
-            const canvas = new OffscreenCanvas(data.width, data.height);
-            canvas.height = data.height;
-            canvas.width = data.width;
-            const ctx = canvas.getContext("2d");
-            ctx.drawImage(data, 0, 0, data.width, data.height);
-            renderer.updateImage(canvas);
+            renderer.updateImage(data);
             renderer.render();
         };
     }
