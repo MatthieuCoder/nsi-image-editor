@@ -4,15 +4,14 @@
     <link href="css/page.css" rel="stylesheet" />
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
 </head>
 <body>
 
 <div class="layout">
     <div class="content">
-        <div class="canvasZone">
-            <canvas id="canvas"></canvas>
-        </div>
+        <canvas id="canvas"></canvas>
     </div>
     <div class="right">
         <div class="title">
@@ -20,17 +19,23 @@
             <p>
                 Ce site a été réalisé par Matthieu Pignolet pendant ma première année de spé NSI. <br/>
                 Pour vous servir du site web, veuillez sélectionner une image dans les controles du programme
+                puis appliquez appliquez un ou plusieurs effets a votre image.
             </p>
         </div>
         <div class="controls">
         <h3>Controles de l'édition</h3>
-
+        <button onclick="document.querySelector('#file').click()">
+            Choisir un fichier
+        </button>
+            <br/>
+            <i>
+                Les filtres sont gardés en cas de changement d'image
+            </i>
         <input id="file" type="file" title="Image a éditer" accept="image/x-png,image/jpeg" />
 
         <h3>Effets disponibles</h3>
-        <span id="filters" />
 
-        <label for="select">Filtre selectionné</label> <br/><select id="select"></select>
+        <br/><select id="select"></select>
         <button id="add-filter">
             Ajouter le filtre
         </button>
@@ -38,7 +43,10 @@
         <button id="img-export">
             Exporter l'image
         </button>
+            <hr style="width: 100%;"/>
         </div>
+
+        <span id="filters"></span>
     </div>
 </div>
 <script src="js/index.js"></script>
