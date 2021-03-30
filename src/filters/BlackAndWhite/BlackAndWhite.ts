@@ -8,35 +8,25 @@ import fragmentSource from './shader.f.glsl'
 import { setRectangle } from '../../utilities/webglUtils'
 import { Filter } from '../index'
 
-class ColorBalance extends BaseFilter {
+class BlackAndWhite extends BaseFilter {
     private uResolutionLocation: WebGLUniformLocation;
     private uImageLocation: WebGLUniformLocation;
-    private uLuminance: WebGLUniformLocation;
+    private uForce: WebGLUniformLocation;
 
-    private state: {
-        r: number;
-        g: number;
-        b: number;
-    } = {
-      r: 1,
-      g: 1,
-      b: 1
-    };
+    private state: number;
 
     private form: HTMLFormElement;
 
     private _stateUpdate () {
-      this.state.r = parseInt((this.form.elements.namedItem('red') as HTMLInputElement).value) / 100
-      this.state.g = parseInt((this.form.elements.namedItem('green') as HTMLInputElement).value) / 100
-      this.state.b = parseInt((this.form.elements.namedItem('blue') as HTMLInputElement).value) / 100
+      this.state = 2 - (parseInt((this.form.elements.namedItem('factor') as HTMLInputElement).value) / 100)
 
       this._callRender()
     };
 
     constructor (gl: WebGL2RenderingContext,
-                private positionBuffer: WebGLBuffer,
-                private texCoordBuffer: WebGLBuffer,
-                _callRender: Function
+                 private positionBuffer: WebGLBuffer,
+                 private texCoordBuffer: WebGLBuffer,
+                 _callRender: Function
     ) {
       super(gl, vertexSource, fragmentSource, _callRender)
       this._initialize()
@@ -44,7 +34,7 @@ class ColorBalance extends BaseFilter {
 
     private _initialize () {
       this.uResolutionLocation = this.gl.getUniformLocation(this.program, 'u_resolution')
-      this.uLuminance = this.gl.getUniformLocation(this.program, 'u_luminance')
+      this.uForce = this.gl.getUniformLocation(this.program, 'u_colorFactor')
       this.uImageLocation = this.gl.getUniformLocation(this.program, 'u_image')
       const aPositionLocation = this.gl.getAttribLocation(this.program, 'a_position')
       const aTexCoordLocation = this.gl.getAttribLocation(this.program, 'a_texCoord')
@@ -66,7 +56,7 @@ class ColorBalance extends BaseFilter {
       this.gl.uniform1i(this.uImageLocation, 0)
       this.gl.uniform2f(this.uResolutionLocation, this.gl.canvas.width, this.gl.canvas.height)
 
-      this.gl.uniform4f(this.uLuminance, this.state.r, this.state.g, this.state.b, 1)
+      this.gl.uniform1f(this.uForce, this.state)
 
       this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.positionBuffer)
       setRectangle(this.gl, 0, 0, this.gl.canvas.width, this.gl.canvas.height)
@@ -80,21 +70,13 @@ class ColorBalance extends BaseFilter {
       this.form.innerHTML = `
             <div class="adjustments" style="flex-flow: column; display: flex;">
                 <label>
-                    R
-                    <input id="red" name="red" type="range" max="200">
-                </label>
-                <label>
-                    G
-                    <input id="green" name="green" type="range" max="200">
-                </label>
-                <label>
-                    B
-                    <input id="blue" name="blue" type="range" max="200">
+                    Factor
+                    <input id="factor" name="factor" type="range" max="200">
                 </label>
             </div>
         `;
 
-      ['blue', 'green', 'red'].forEach((name) => {
+      ['factor'].forEach((name) => {
         this.form.elements[name].addEventListener('input', this._stateUpdate.bind(this))
       })
       component.appendChild(this.form)
@@ -103,7 +85,7 @@ class ColorBalance extends BaseFilter {
     }
 }
 
-export const ColorBalanceFilter: Filter = {
-  name: 'Balance de couleurs',
-  constructor: ColorBalance
+export const BlackAndWhiteFilter: Filter = {
+  name: 'Noir et blanc',
+  constructor: BlackAndWhite
 }

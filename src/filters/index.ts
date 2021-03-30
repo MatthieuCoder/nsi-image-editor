@@ -1,17 +1,15 @@
-import {ColorBalance} from "./ColorBalance/ColorBalance";
-import {Sepia} from "./Sepia/Sepia";
-import {BaseFilterConstructor} from "../struct/BaseFilter";
+import { ColorBalanceFilter } from './ColorBalance/ColorBalance'
+import { SepiaFilter } from './Sepia/Sepia'
+import { BaseFilterConstructor } from '../struct/BaseFilter'
+import { BlackAndWhiteFilter } from './BlackAndWhite/BlackAndWhite'
 
-export const Filters: {
+export type Filter = {
     name: string;
     constructor: BaseFilterConstructor;
-}[] = [
-    {
-        name: "Filtre sépia",
-        constructor: Sepia
-    },
-    {
-        name: "Balance de couleurs",
-        constructor: ColorBalance,
-    },
-];
+};
+
+export const Filters: Filter[] = [
+  SepiaFilter,
+  ColorBalanceFilter,
+  BlackAndWhiteFilter
+]
